@@ -2,6 +2,8 @@ FROM alpine:latest
 RUN apk --no-cache add \
     composer \
     git \
+    jq \
+    curl \
     nodejs \
     nodejs-npm \
     php7 \
