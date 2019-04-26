@@ -1,5 +1,13 @@
 #!/bin/bash -e
 
+json_quote() {
+    echo '{}' | jq --arg var "$1" '$var'
+}
+
+echoerr() {
+    printf "%s\n" "$*" >&2
+}
+
 if [ -z "$2" ]; then
     echoerr "Usage: $0 ROLE USER [SSH_KEY_PATH]"
     exit 1
@@ -10,14 +18,6 @@ if [ -z "$3" ]; then
 else
     SSH_KEY_PATH="$3"
 fi
-
-json_quote() {
-    echo '{}' | jq --arg var "$1" '$var'
-}
-
-echoerr() {
-    printf "%s\n" "$*" >&2
-}
 
 if [ ! -d "$(dirname $SSH_KEY_PATH)" ]; then
     install -dm700 "$(dirname $SSH_KEY_PATH)"
