@@ -40,13 +40,7 @@ EOF
 )
 
 if [ ! -f "$SSH_KEY_PATH-cert.pub" ]; then
-    "$(dirname "$0")"/curl-vault "ssh-client-signer/sign/$ROLE" -X POST -d "$PAYLOAD" | jq -r .data.signed_key > "$SSH_KEY_PATH-cert.pub"
+    RESPONSE=$("$(dirname "$0")"/curl-vault "ssh-client-signer/sign/$ROLE" -X POST -d "$PAYLOAD")
+    echo "$RESPONSE"
+    echo "$RESPONSE" | jq -r .data.signed_key > "$SSH_KEY_PATH-cert.pub"
 fi
-
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    SSH_AGENT="$(ssh-agent -s)"
-    eval "$SSH_AGENT" >/dev/null
-fi
-
-ssh-add -q "$SSH_KEY_PATH"
-echo -n "$SSH_AGENT"

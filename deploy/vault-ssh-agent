@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+if [ -z "$3" ]; then
+    SSH_KEY_PATH="$HOME/.ssh/vault_rsa"
+else
+    SSH_KEY_PATH="$3"
+fi
+
+"$(dirname "$0")"/vault-ssh-keysign "$@" >/dev/null
+
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    SSH_AGENT="$(ssh-agent -s)"
+    eval "$SSH_AGENT" >/dev/null
+fi
+
+ssh-add -q "$SSH_KEY_PATH"
+echo -n "$SSH_AGENT"

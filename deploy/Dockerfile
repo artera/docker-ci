@@ -15,7 +15,8 @@ RUN apk --no-cache add \
     openssh-client \
     rsync
 RUN pip3 --no-cache-dir install fabric patchwork jinja2 dataclasses requests
-RUN apk --no-cache del python3-dev libffi-dev openssl-dev gcc make musl-dev
+RUN apk --no-cache del python3-dev libffi-dev openssl-dev gcc musl-dev
 COPY curl-vault /usr/local/bin/curl-vault
 COPY vault-ssh-keysign /usr/local/bin/vault-ssh-keysign
+COPY vault-ssh-agent /usr/local/bin/vault-ssh-agent
 CMD sh
