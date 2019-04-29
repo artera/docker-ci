@@ -23,11 +23,13 @@ RUN apk --no-cache add \
     aspell-dev \
     libzip \
     libzip-dev \
+    tidyhtml-libs \
+    tidyhtml-dev \
     make \
     python3
 RUN docker-php-ext-install -j$(nproc) bcmath bz2 calendar \
     enchant exif gd gettext gmp imap intl opcache pcntl \
-    pdo_mysql pspell sockets zip
+    pdo_mysql pspell sockets tidy zip
 RUN apk del \
     bzip2-dev \
     enchant-dev \
@@ -36,7 +38,8 @@ RUN apk del \
     imap-dev \
     icu-dev \
     aspell-dev \
-    libzip-dev
+    libzip-dev \
+    tidyhtml-dev
 RUN composer global require --no-plugins --no-scripts "squizlabs/php_codesniffer=*" && \
     rm -rf /root/.composer/cache
 RUN npm install -g pnpm
