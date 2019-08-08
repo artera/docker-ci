@@ -1,15 +1,18 @@
 #!/bin/bash -e
 
 NAME=$1
-RELVER=${2:-7}
-RPMHOME="${RPMHOME:-"$HOME/rpmbuild"}"
-PKGHOME="$RPMHOME/package"
-RESULTDIR="$PKGHOME/target"
 
-mkdir -p "$RESULTDIR"
-rm -f "$RESULTDIR"/$NAME-*.src.rpm
+if [ -z "$NAME" ]; then
+    echo "Usage: $0 PACKAGE_NAME"
+    exit 1
+fi
 
-spectool -d "rhel $RELVER" -d "%_sourcedir $PKGHOME" -d "%_specdir $PKGHOME" -d "%_topdir $RPMHOME" -g -R "$PKGHOME"/$NAME.spec
-rpmbuild -bs -D "rhel $RELVER" -D "_sourcedir $PKGHOME" -D "_srcrpmdir $RESULTDIR" -D "_topdir $RPMHOME" --nodeps "$PKGHOME"/$NAME.spec
-yum-builddep -y "$PKGHOME"/$NAME.spec
-rpmbuild --rebuild -D "rhel $RELVER" -D "_rpmdir $RESULTDIR" -D "_topdir $RPMHOME" "$RESULTDIR"/$NAME-*.src.rpm
+cd "$HOME/rpmbuild"
+
+mkdir -p package/target
+rm -f package/target/$NAME-*.src.rpm
+
+spectool -g -R package/$NAME.spec
+rpmbuild -bs --nodeps package/$NAME.spec
+yum-builddep -y package/$NAME.spec
+rpmbuild --rebuild package/target/$NAME-*.src.rpm
