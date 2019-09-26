@@ -26,10 +26,12 @@ RUN apk --no-cache add \
     tidyhtml-libs \
     tidyhtml-dev \
     make \
-    python3
+    python3 \
+    mariadb-client \
+    postgresql-client
 RUN docker-php-ext-install -j$(nproc) bcmath bz2 calendar \
     enchant exif gd gettext gmp imap intl opcache pcntl \
-    pdo_mysql pspell sockets tidy zip
+    pdo_mysql pspell sockets tidy zip mysqli
 RUN apk del \
     bzip2-dev \
     enchant-dev \
