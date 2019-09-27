@@ -32,16 +32,19 @@ RUN apk --no-cache add \
 RUN docker-php-ext-install -j$(nproc) bcmath bz2 calendar \
     enchant exif gd gettext gmp imap intl opcache pcntl \
     pdo_mysql pspell sockets tidy zip mysqli
-RUN apk del \
-    bzip2-dev \
-    enchant-dev \
-    libpng-dev \
-    gmp-dev \
-    imap-dev \
-    icu-dev \
-    aspell-dev \
-    libzip-dev \
-    tidyhtml-dev
+RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS && \
+    pecl install pcov && docker-php-ext-enable pcov && \
+    apk del --no-network \
+        .phpize-deps \
+        bzip2-dev \
+        enchant-dev \
+        libpng-dev \
+        gmp-dev \
+        imap-dev \
+        icu-dev \
+        aspell-dev \
+        libzip-dev \
+        tidyhtml-dev
 RUN composer global require --no-plugins --no-scripts "squizlabs/php_codesniffer=*" && \
     rm -rf /root/.composer/cache
 RUN npm install -g pnpm
