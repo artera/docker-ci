@@ -25,13 +25,14 @@ RUN apk --no-cache add \
     libzip-dev \
     tidyhtml-libs \
     tidyhtml-dev \
+    openldap-dev \
     make \
     python3 \
     mariadb-client \
     postgresql-client
 RUN docker-php-ext-install -j$(nproc) bcmath bz2 calendar \
-    enchant exif gd gettext gmp imap intl opcache pcntl \
-    pdo_mysql pspell sockets tidy zip mysqli
+    enchant exif gd gettext gmp imap intl ldap opcache \
+    pcntl pdo_mysql pspell sockets tidy zip mysqli
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS && \
     pecl install pcov uopz && docker-php-ext-enable pcov uopz && \
     apk del --no-network \
@@ -44,7 +45,8 @@ RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS && \
         icu-dev \
         aspell-dev \
         libzip-dev \
-        tidyhtml-dev
+        tidyhtml-dev \
+        openldap-dev
 RUN composer global require --no-plugins --no-scripts "squizlabs/php_codesniffer=*" && \
     rm -rf /root/.composer/cache
 RUN npm install -g pnpm
