@@ -1,6 +1,5 @@
-FROM php:alpine
+FROM php:7.4-alpine
 RUN apk --no-cache add \
-    composer \
     git \
     jq \
     nodejs \
@@ -47,7 +46,10 @@ RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS && \
         libzip-dev \
         tidyhtml-dev \
         openldap-dev
-RUN composer global require --no-plugins --no-scripts "squizlabs/php_codesniffer=*" && \
+COPY composer-setup.sh /usr/local/bin/composer-setup.sh
+RUN /usr/local/bin/composer-setup.sh && \
+    rm -f /usr/local/bin/composer-setup.sh && \
+    composer global require --no-plugins --no-scripts "squizlabs/php_codesniffer=*" && \
     rm -rf /root/.composer/cache
 RUN npm install -g pnpm
 RUN pip3 --no-cache-dir install jinja2 requests
